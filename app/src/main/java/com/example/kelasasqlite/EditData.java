@@ -1,32 +1,43 @@
 package com.example.kelasasqlite;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.kelasasqlite.database.DBController;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.security.PrivateKey;
 import java.util.HashMap;
 
-public class TemanBaru extends AppCompatActivity {
+public class EditData extends AppCompatActivity {
     private TextInputEditText tNama,tTelp;
     private Button saveBtn;
-    String nm,tlp;
+    String nm,tlp,id;
     DBController controller = new DBController(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teman_baru);
+        setContentView(R.layout.activity_edit_data);
 
-        tNama = findViewById(R.id.tietNama);
-        tTelp = findViewById(R.id.tietTelpon);
+        tNama = findViewById(R.id.edNama);
+        tTelp = findViewById(R.id.edTelp);
         saveBtn = findViewById(R.id.saveBtn);
+
+        id = getIntent().getStringExtra("id");
+        nm = getIntent().getStringExtra("nama");
+        tlp = getIntent().getStringExtra("telp");
+
+
+        setTitle("Edit Data");
+        tNama.setText(nm);
+        tTelp.setText(tlp);
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,16 +48,17 @@ public class TemanBaru extends AppCompatActivity {
                     nm = tNama.getText().toString();
                     tlp = tTelp.getText().toString();
                     HashMap<String,String> val = new HashMap<>();
+                    val.put("id",id);
                     val.put("nama",nm);
                     val.put("telp",tlp);
-                    controller.insertData(val);
+                    controller.updateData(val);
                     callHome();
                 }
             }
         });
     }
     public void callHome(){
-        Intent i = new Intent(TemanBaru.this,MainActivity.class);
+        Intent i = new Intent(EditData.this,MainActivity.class);
         startActivity(i);
         finish();
     }
